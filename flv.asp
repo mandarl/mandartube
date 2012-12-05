@@ -38,20 +38,20 @@
     <![endif]-->
 
 </head>
-<body id="dt_example">
+<body id="dt_example" style="background-color:#FAFDFD">
 	<img src="http://punitp97105d/dataTables-1.5/media/images/back_disabled.jpg" style="visibility:hidden;"/>
 	<img src="http://punitp97105d/dataTables-1.5/media/images/forward_disabled.jpg" style="visibility:hidden;"/>
 	<img src="http://punitp97105d/dataTables-1.5/media/images/sort_both.jpg" style="visibility:hidden;"/>
 	<img src="http://punitp97105d/dataTables-1.5/media/images/sort_desc.jpg" style="visibility:hidden;"/>
 	
 	
-		<div id="container1" style="margin-left: auto;margin-right: auto;width:800px">
+		<div id="container1" style="margin-left: auto;margin-right: auto;width:800px;padding:50px;background-color:#FFF">
 			<div id="divUploaders" style="margin-top: 20px;float: left;">
 					<span style="color: red;"><b>Uploaders:</b></span>
 					<span><a href="?feature=Abhijit">Abhijit</a></span> | 
 					<span><a href="/">Mandar</a></span>
 			</div>
-			<div id="logo" style="float:right;"><a href="/"><img src="logo.gif" BORDER="0" /></a></div>
+			<div id="logo" style="float:right;"><a href="/"><img src="images/logo.gif" BORDER="0" /></a></div>
 	    
 <%
 
@@ -75,9 +75,9 @@ sFilePath = "data/" & sFeaturePath & "/" & sFileName & ".flv"
 sFLVPath = "/data/" & sFeaturePath & "/" & sFileName & ".flv"
 sBaseFolder = "D:\temp"
 If sFeaturePath <> "" Then
-	sDescriptionFilePath = ".\data\" & sFeaturePath & "\" & sFileName & ".txt"
+	sDescriptionFilePath = ".\data\" & sFeaturePath & "\" & sFileName & ".flv.description"
 Else
-	sDescriptionFilePath = ".\data\" & sFileName & ".txt"
+	sDescriptionFilePath = ".\data\" & sFileName & ".flv.description"
 End If
 
 
@@ -85,21 +85,23 @@ End If
 
 If sFileName <> "" Then
 	Response.Write "<h1 id=""vidname"">" & sFileName & "</h1><br>"
-	Response.Write "<table width='100%'><tr><td><table width='550px'><tr><td>"
+	
+	Response.Write "<table width='100%'><tr><td><table width='590px'><tr><td>"
 	Response.Write "<div id=""vcontainer""><span style=""color:#FF0000"">You need Flash Player 10 to play videos: </span><a href=""InstallFlash10.exe""><u>Install Adobe Flash Player</u></a><br/><br/><br/><br/></div>"
 	
 '	Response.Write "<embed src='player.swf' width='480'  height='385' allowscriptaccess='always'"
 '	Response.Write "allowfullscreen='true'  flashvars='file="
 '	Response.Write sFilePath
 '	Response.Write "&autostart=true'/>"
+
 	'If sFeaturePath <> "" Then
 	    sDescription = ReadFromFile(sDescriptionFilePath)
 	    If sDescription <> "" Then
 	    	Response.Write("<br><p>" & sDescription & "</p><br><br>")
 	    End If
 	'End If
-	Response.Write "</td>"
-	Response.Write "<td align='right' valign='top'><table><tr><td>"
+	Response.Write "</td><td>&nbsp;</td>"
+	Response.Write "<td align='right' valign='top' style='padding: 8px; background-color: rgb(238, 238, 238);'><table><tr><td>"
 	pageUrl = Request.ServerVariables("URL") & "?" & Request.Querystring
 	strHost2 = "http://punitp97105d" & pageUrl
 	strHost1 = "http://172.25.179.33" & pageUrl
@@ -107,12 +109,12 @@ If sFileName <> "" Then
 'Server.URLEncode(strHost1) & "%0A%0Aor%0A%0A" & 
 
 	bodyText = Server.URLEncode(strHost2)
-	Response.Write "<div><a href='mailto:?subject=MandarTube: " & sFileName & "&body=" & bodyText & "'><img src='mail.png' alt='Email video link' style='height:50px;width:50px;margin-left:-4px;' /></a></div>"
+	Response.Write "<div><a href='mailto:?subject=MandarTube: " & sFileName & "&body=" & bodyText & "'><img src='images/mail.png' alt='Email video link' style='height:50px;width:50px;margin-left:-1px;' /></a></div>"
 	Response.Write "</td></tr><tr><td>"
 	'Response.Write "<br><div><a href='" & sFLVPath & "'>Download FLV</a></div>"
-	Response.Write "<div><a href='" & sFLVPath & "'><img src='save.png' alt='Download the FLV file' style='height:45px;width:45px;' /></a></div>"
+	Response.Write "<div><a href='" & sFLVPath & "'><img src='images/save.png' alt='Download the FLV file' style='height:45px;width:45px;margin-left:2px;' /></a></div>"
 	Response.Write "</td></tr>"
-	Response.Write "</table></td></tr></table></td><td align='right' valign='top'>"
+	Response.Write "</table></td></tr></table></td><td align='right' valign='top' style='text-align: right; font-family: monospace; font-size: 1.5em; padding: 25px; background-color: rgb(238, 238, 238);'>"
 	Response.Write "<table>"
 	Response.Write "<tr><td><h3>Sections</h3></td></tr>"
 	Response.Write "<tr><td><a href='/'>Home</a></td></tr>"
@@ -172,9 +174,9 @@ objRST.Open
 '*
 Dim intFIL
 For Each intFIL In objFIL
-	If InStr(intFil.name, ".flv") > 0 Then
+	If InStr(intFil.name, ".flv") > 0 And InStr(intFil.name, ".description") < 1 Then
 		objRST.AddNew
-		objRST.Fields(cRS1) = intFIL.DateCreated
+		objRST.Fields(cRS1) = intFIL.DateLastModified
 		objRST.Fields(cRS2) = intFIL.name
 		objRST.Update
 	End If
@@ -182,7 +184,7 @@ Next
 '*
 '* Sort RecordSet
 '*
-objRST.Sort = cRS1 & " DESC"
+objRST.Sort = cRS1 & " ASC"
 
 	If sFeaturePath <> "" Then
 		Response.Write("<br/><br/><br/><br/><H1>Featured Presenter: <U>" & sFeaturePath & "</U></H1>")
@@ -214,6 +216,8 @@ If objRST.RecordCount > 0 Then
 Else
 	Response.Write("<h2>No videos found!</h2>")
 End If
+Response.Write("<BR /><HR /><BR /><div><a href='https://github.com/mandarl/mandartube'><img src='images/github-logo.png' /></a></div><BR />")
+
 '*
 '* Destroy Objects
 '*
